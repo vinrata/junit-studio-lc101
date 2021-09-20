@@ -1,6 +1,10 @@
 package main;
 
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+
 public class BalancedBrackets {
     /**
      * The function BalancedBrackets should return true if and only if
@@ -22,14 +26,49 @@ public class BalancedBrackets {
      * @return true if balanced, false otherwise
      */
     public static boolean hasBalancedBrackets(String str) {
-        int brackets = 0;
-        for (char ch : str.toCharArray()) {
-            if (ch == '[') {
-                brackets++;
-            } else if (ch == ']') {
-                brackets--;
+        Deque<Character> stack
+                = new ArrayDeque<Character>();
+
+        // Traversing the Expression
+        for (int i = 0; i < str.length(); i++)
+        {
+            char x = str.charAt(i);
+
+            if (x == '(' || x == '[' || x == '{')
+            {
+                // Push the element in the stack
+                stack.push(x);
+                continue;
+            }
+
+            // If current character is not opening
+            // bracket, then it must be closing. So stack
+            // cannot be empty at this point.
+            if (stack.isEmpty())
+                return false;
+            char check;
+            switch (x) {
+                case ')':
+                    check = stack.pop();
+                    if (check == '{' || check == '[')
+                        return false;
+                    break;
+
+                case '}':
+                    check = stack.pop();
+                    if (check == '(' || check == '[')
+                        return false;
+                    break;
+
+                case ']':
+                    check = stack.pop();
+                    if (check == '(' || check == '{')
+                        return false;
+                    break;
             }
         }
-        return brackets == 0;
+
+        // Check Empty Stack
+        return (stack.isEmpty());
     }
 }
